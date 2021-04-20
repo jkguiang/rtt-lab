@@ -1,16 +1,18 @@
-delay_ms=${1}
+delays_x5ms=$(seq 1 10)
 
-# Add delay
-tc qdisc add dev eth0 root netem delay ${1}ms
+mkdir -p outputs
 
-# Run test
-start_utc_ns=$(date +%s%N)
-python experiments/test.py --input_file=test.dat --chunk_size=4
-end_utc_ns=$(date +%s%N)
-
-# Print runtime
-runtime="$((${end_utc_ns} - ${start_utc_ns}))"
-echo "${runtime} nanoseconds"
-
-# Remove delay
-tc qdisc del dev eth0 root netem delay ${1}ms
+for delay_x5ms in ${delays_x5ms}; do
+    delay_ms=$((${delay_x5ms}*5))
+    echo "Running with a ${delay_ms}ms delay..."
+    # Add delay
+    tc qdisc add dev eth0 root netem delay ${delay_ms}ms
+    # Run test
+    python experiments/test.py \
+        --input_file=test.dat \
+        --output_json="outputs/${output_json}" \
+        --chunk_size=4
+    # Remove delay
+    tc qdisc del dev eth0 root netem delay ${delay_ms}ms
+    echo "Done."
+done
