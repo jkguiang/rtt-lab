@@ -40,19 +40,26 @@ $ docker exec -it rtt-client /bin/bash
 
 ## Running tests
 For a simple unit test, you can try the pre-written unit test found inside `client/experiments`.
-1. Use the client container interactively (see above)
-2. Activate the conda environment
+1. Use the client container interactively
 ```
-$ conda activate rtt-env
+$ docker exec -it rtt-client /bin/bash
+```
+2. Navigate to the `client` directory (this is a shared area between your machine and the container!)
+```
+[root@blah home]# cd client
+```
+3. Activate the conda environment
+```
+[root@blah client]# conda activate rtt-env
 ```
 3. Run a control
 ```
-(rtt-env) $ ./test.sh 0
+(rtt-env) [root@blah client]# ./test.sh 0
 Runtime: 0.14122414588928223 seconds
 ```
 4. Add an arbitrary delay (in ms)
 ```
-(rtt-env) $ ./test.sh 10
+(rtt-env) [root@blah client]# ./test.sh 10
 Runtime: 2.930720090866089 seconds
 ```
 5. The runtime with the artificial network delay was longer! :tada:
