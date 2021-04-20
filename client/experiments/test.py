@@ -19,7 +19,6 @@ def test(file_name, redirector="172.17.0.2:1094", chunk_size=4, verbose=False):
     return
 
 if __name__ == "__main__":
-    test("test.dat")
     # CLI
     cli = argparse.ArgumentParser(description="Run RTT Lab unit test")
     cli.add_argument(
