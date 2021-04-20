@@ -28,7 +28,7 @@ $ docker build -t rtt-client .
 6. Run a Docker container using the `rtt-client` image
       - `-td` keeps the container running (detatched)
       - `-v ...` mounts the project directory (should be your current working directory) to the container with read/write privileges
-      - `--cap-addr=NET_ADMIN` allows the container to modify network properties (i.e. use the tool for adding artificial network delay)
+      - `--cap-add=NET_ADMIN` allows the container to modify network properties (i.e. use the tool for adding artificial network delay)
       - `--name=rtt-client` gives the container a human-readable name
 ```
 $ docker run -td -v $PWD:/home/$(basename $PWD) --user=root --cap-add=NET_ADMIN --name=rtt-client rtt-client
