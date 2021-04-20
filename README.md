@@ -39,20 +39,20 @@ $ docker exec -it rtt-client /bin/bash
 ```
 
 ## Running tests
-For a simple unit test, you can try to `xrdcp` a file (`test.dat`) from the server to the client.
+For a simple unit test, you can try the pre-written unit test found inside `client/experiments`.
 1. Use the client container interactively (see above)
-2. Download the file
+2. Activate the conda environment
 ```
-$ xrdcp root://172.17.0.2:1094//test.dat .
+$ conda activate rtt-env
 ```
-3. Add an arbitrary delay (say, 100ms)
+3. Run a control
 ```
-$ tc qdisc add dev eth0 root netem delay 100ms
+(rtt-env) $ ./run.sh 0
+522121500 nanoseconds
 ```
-4. Re-download the file (delete the one you downloaded before)
-5. It should be slower :tada:
-6. Don't forget to remove the delay you set for good measure
+4. Add an arbitrary delay (in ms)
 ```
-$ tc qdisc del dev eth0 root netem delay 100ms
+(rtt-env) $ ./run.sh 10
+6124066900 nanoseconds
 ```
-You can also try pinging an arbitrary server, e.g. `google.com`, and confirm that the exact delay is applied. Better tests to come.
+5. Tada! :tada:
