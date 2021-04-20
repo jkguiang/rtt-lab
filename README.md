@@ -48,11 +48,11 @@ $ conda activate rtt-env
 3. Run a control
 ```
 (rtt-env) $ ./run.sh 0
-522121500 nanoseconds
+384065700 nanoseconds
 ```
 4. Add an arbitrary delay (in ms)
 ```
 (rtt-env) $ ./run.sh 10
-6124066900 nanoseconds
+3187930400 nanoseconds
 ```
-5. Tada! :tada:
+5. The runtime with the artificial network delay was longer! :tada:
