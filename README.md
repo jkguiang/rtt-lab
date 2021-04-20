@@ -14,10 +14,11 @@ $ cd server
 $ docker build -t rtt-server .
 ```
 4. Run a Docker container using the `rtt-server` image
-  - `-itd` runs in interactive mode and keeps the container running
-  - the server should run at `172.17.0.2:1094`, but run `docker inspect <container id>` to check
+      - `-td` keeps the container running (detatched)
+      - `--name=rtt-server` gives the container a human-readable name
+      - the server should run at `172.17.0.2:1094`, but run `python inspect.py` to check
 ```
-$ docker run -itd rtt-server
+$ docker run -td --name=rtt-server rtt-server
 ```
 5. Build the client Docker Image
 ```
@@ -25,14 +26,16 @@ $ cd ../client
 $ docker build -t rtt-client .
 ```
 6. Run a Docker container using the `rtt-client` image
-  - `-itd` runs in interactive mode and keeps the container running
-  - `-v ...` mounts the project directory (should be your current working directory) to the container with read/write privileges
+      - `-td` keeps the container running (detatched)
+      - `-v ...` mounts the project directory (should be your current working directory) to the container with read/write privileges
+      - `--cap-addr=NET_ADMIN` allows the container to modify network properties (i.e. use the tool for adding artificial network delay)
+      - `--name=rtt-client` gives the container a human-readable name
 ```
-$ docker run -itd -v $PWD:/home/$(basename $PWD) --user=root --cap-add=NET_ADMIN rtt-client
+$ docker run -td -v $PWD:/home/$(basename $PWD) --user=root --cap-add=NET_ADMIN --name=rtt-client rtt-client
 ```
 7. Use the client container interactively (or modify the Dockerfile to run your tests.)
 ```
-$ docker exec -it <container id> /bin/bash
+$ docker exec -it rtt-client /bin/bash
 ```
 
 ## Running tests
