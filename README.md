@@ -7,30 +7,30 @@ This is a virtual "laboratory" for testing the effect of Round Trip Times (RTT) 
 $ git clone https://github.com/jkguiang/rtt-lab.git
 $ cd rtt-lab
 ```
-3. Download Docker (i.e. [here](https://docs.docker.com/docker-for-mac/install/) for MacOS users)
-4. Build the server Docker Image
+2. Download Docker (i.e. [here](https://docs.docker.com/docker-for-mac/install/) for MacOS users)
+3. Build the server Docker Image
 ```
 $ cd server
 $ docker build -t rtt-server .
 ```
-5. Run a Docker container using the `rtt-server` image
+4. Run a Docker container using the `rtt-server` image
   - `-itd` runs in interactive mode and keeps the container running
   - the server should run at `172.17.0.2:1094`, but run `docker inspect <container id>` to check
 ```
 $ docker run -itd rtt-server
 ```
-7. Build the client Docker Image
+5. Build the client Docker Image
 ```
 $ cd ../client
 $ docker build -t rtt-client .
 ```
-8. Run a Docker container using the `rtt-client` image
+6. Run a Docker container using the `rtt-client` image
   - `-itd` runs in interactive mode and keeps the container running
   - `-v ...` mounts the project directory (should be your current working directory) to the container with read/write privileges
 ```
 $ docker run -itd -v $PWD:/home/$(basename $PWD) --user=root --cap-add=NET_ADMIN rtt-client
 ```
-9. Use the client container interactively (or modify the Dockerfile to run your tests.)
+7. Use the client container interactively (or modify the Dockerfile to run your tests.)
 ```
 $ docker exec -it <container id> /bin/bash
 ```
