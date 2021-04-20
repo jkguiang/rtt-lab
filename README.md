@@ -33,7 +33,7 @@ $ docker build -t rtt-client .
 ```
 $ docker run -td -v $PWD:/home/$(basename $PWD) --user=root --cap-add=NET_ADMIN --name=rtt-client rtt-client
 ```
-7. Use the client container interactively (or modify the Dockerfile to run your tests.)
+7. Use the client container interactively (or modify the Dockerfile) to run your tests.
 ```
 $ docker exec -it rtt-client /bin/bash
 ```
