@@ -1,5 +1,5 @@
 import uproot
-from argparse import ArgumentParser, RawTextHelpFormatter
+import argparse
 
 def test(file_name, redirector="172.17.0.2:1094", chunk_size=4, verbose=False):
     # Define connection to XRootD file
@@ -21,8 +21,7 @@ def test(file_name, redirector="172.17.0.2:1094", chunk_size=4, verbose=False):
 if __name__ == "__main__":
     test("test.dat")
     # CLI
-    cli = ArgumentParser(description="Run RTT Lab unit test",
-                               formatter_class=RawTextHelpFormatter)
+    cli = argparse.ArgumentParser(description="Run RTT Lab unit test")
     cli.add_argument(
         "-c", "--chunk_size", 
         type=int, default=4,
