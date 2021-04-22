@@ -2,12 +2,12 @@
 This is a virtual "laboratory" for testing the effect of Round Trip Times (RTT) on NanoAOD read latency. Established in 2021 for an [EXPAND](https://center.ucsd.edu/programs/EXPAND.html) project.
 
 ## Setup
-1. Clone this repository
+1. Download Docker (i.e. [here](https://docs.docker.com/docker-for-mac/install/) for MacOS users)
+2. Clone this repository
 ```
 $ git clone https://github.com/jkguiang/rtt-lab.git
 $ cd rtt-lab
 ```
-2. Download Docker (i.e. [here](https://docs.docker.com/docker-for-mac/install/) for MacOS users)
 3. Build the server Docker Image
 ```
 rtt-lab $ cd server
