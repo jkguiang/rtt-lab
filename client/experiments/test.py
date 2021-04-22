@@ -4,9 +4,9 @@ import json
 import utils
 
 @utils.rtt_test
-def test(file_name, redirector="172.17.0.2:1094", chunk_size=4, verbose=False):
+def test(file_name, server="172.17.0.2:1094", chunk_size=4, verbose=False):
     # Define connection to XRootD file
-    xrd_path = f"root://{redirector}//{file_name}"
+    xrd_path = f"root://{server}//{file_name}"
     xrd_resource = uproot.source.xrootd.XRootDResource(xrd_path, timeout=None)
     # Read in chunk-by-chunk
     n_bytes = xrd_resource.num_bytes
@@ -46,12 +46,18 @@ if __name__ == "__main__":
         action="store_true",
         default=False
     )
+    cli.add_argument(
+        "--server", 
+        type=str, default="172.17.0.2:1094",
+        help="<IP>:<port> of server"
+    )
 
     # Get args
     args = cli.parse_args()
     # Run test
     report = test(
         args.input_file, 
+	server=args.server,
         chunk_size=args.chunk_size, 
         verbose=args.verbose
     )
