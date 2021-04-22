@@ -20,7 +20,7 @@ if [[ "${experiment}" != "" ]]; then
         # Remove delay
         tc qdisc del dev eth0 root netem delay ${delay_ms}ms
         # Compress output
-        gzip ${output_json}
+        gzip -f ${output_json}
         echo "Done."
     done
 else
