@@ -53,7 +53,7 @@ For a simple unit test, you can try the pre-written unit test found inside `clie
 ```
 $ docker exec -it rtt-client /bin/bash
 ```
-2. Navigate to the `client` directory (this is a shared area between your machine and the container!)
+2. Navigate to the `client` directory (this is a *shared area* between your machine and the container!)
 ```
 [root@blah home]# cd client
 ```
@@ -61,15 +61,15 @@ $ docker exec -it rtt-client /bin/bash
 ```
 [root@blah client]# conda activate rtt-env
 ```
-3. Run a control
+4. Run a control
       - if your server is not running at `172.17.0.2:1094`, you will need to edit `test.sh` to reflect this
 ```
 (rtt-env) [root@blah client]# ./test.sh 0
 Runtime: 0.14122414588928223 seconds
 ```
-4. Add an arbitrary delay (in ms)
+5. Add an arbitrary delay (in ms)
 ```
 (rtt-env) [root@blah client]# ./test.sh 10
 Runtime: 2.930720090866089 seconds
 ```
-5. The runtime with the artificial network delay was longer! :tada:
+6. The runtime with the artificial network delay was longer! :tada:
