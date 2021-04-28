@@ -62,7 +62,7 @@ if __name__ == "__main__":
         "--output_dir",
         help = "dir to place outputs in", 
         type = str,
-        default = "output/"
+        default = "outputs/hgg_test/"
     )
 
     # Technical
