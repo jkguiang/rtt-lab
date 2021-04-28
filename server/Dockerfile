@@ -5,8 +5,8 @@ EXPOSE 1094
 RUN yum update -y && yum install -y \
     osg-xrootd-standalone
 
-# Upload data
-COPY inputs /data
+# Make directory for data
+RUN mkdir /data
 
 # Update XRootD configurations
 COPY xrootd.cfg /etc/xrootd/xrootd.cfg
