@@ -73,3 +73,23 @@ Runtime: 0.14122414588928223 seconds
 Runtime: 2.930720090866089 seconds
 ```
 6. The runtime with the artificial network delay was longer! :tada:
+
+## Pointing to the Correct Server IP
+If the server is not running at `172.17.0.2:1094`, but instead at `172.17.0.X:1094` where `X != 2`, then you will need to edit the pre-written tests in order for them to work correctly. Any tests written in the future should be equally modifiable since the IP address can vary from time-to-time and machine-to-machine. For those comfortable with bash scripting and the like, simply take a look inside `client/test.sh` and `client/run.sh`. There, you will see that the unit test Python scripts have an argument `--server` that takes the address of the server. For everyone else, this means that the following changes must be made:
+1. Open `client/test.sh` and modify the `--server` argument passed to `client/experiments/simple_test.py`:
+```diff
+# Add delay
+tc qdisc add dev eth0 root netem delay ${1}ms
+# Run test
+- python experiments/simple_test.py --server="172.17.0.2:1094"
++ python experiments/simple_test.py --server="172.17.0.X:1094"
+# Remove delay
+tc qdisc del dev eth0 root netem delay ${1}ms
+```
+2. Open `client/run.sh` and modify the `--server` argument ([here](https://github.com/jkguiang/rtt-lab/blob/main/client/run.sh#L17-L19) specifically) passed to the test being run:
+```diff
+python experiments/${experiment}.py \
+-    --server="172.17.0.2:1094" \
++    --server="172.17.0.X:1094" \
+    --output_json=${output_json}
+```
