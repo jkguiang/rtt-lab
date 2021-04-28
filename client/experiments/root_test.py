@@ -1,46 +1,25 @@
 import uproot
 import argparse
 import json
-import utils
+import rttutils
 
-REPORT = {"reads": [], "runtime":-999}
-
-class RTTSource(uproot.source.xrootd.XRootDSource):
-    """
-    Modified Uproot XRootD source object that writes metadata to a global dict
-    (thanks to Nick Amin for writing this class)
-    """
-    def __init__(self, file_path, **options):
-        super().__init__(file_path, **options)
-
-    def chunk(self, start, stop):
-        global REPORT
-        d = dict(which="chunk", start=start, stop=stop, nbytes=stop-start)
-        REPORT["reads"].append(d)
-        return super().chunk(start, stop)
-
-    def chunks(self, ranges, notifications):
-        global REPORT
-        d = dict(which="chunk", ranges=ranges)
-        REPORT["reads"].append(d)
-        return super().chunks(ranges, notifications)
-
-@utils.rtt_test
+@rttutils.rtt_test
 def run_root_test(server="172.17.0.2:1094", verbose=False):
     """
     Read all of the branches from the test.root file on the server using a modified 
     Uproot XRootD source object
     (thanks to Nick Amin for writing this test)
     """
-    global REPORT
     # Define connection to XRootD file
     xrd_path = f"root://{server}//test.root"
-    uproot_file = uproot.open(xrd_path, xrootd_handler=RTTSource)
+    # Grab the file and read in the ttree object
+    uproot_file = uproot.open(xrd_path, xrootd_handler=rttutils.RTTSource)
     ttree = uproot_file["tree"]
+    # Read all of the branches from this ttree
     floats = ttree["float"].array()
     integers = ttree["integer"].array()
     booleans = ttree["boolean"].array()
-    return REPORT
+    return uproot_file._file._source.report
 
 if __name__ == "__main__":
     # CLI
