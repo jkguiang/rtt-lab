@@ -12,9 +12,9 @@ import copy
 from hgg.selections import diphoton_selections, analysis_selections
 from hgg.selections import photon_selections, lepton_selections, tau_selections, jet_selections
 
-import sys
-sys.path.append("../../") # add grandparent dir to path such that rttutils can be imported
-import rttutils
+# import sys
+# sys.path.append("../../") # add grandparent dir to path such that rttutils can be imported
+from rtt import utils
 
 class LoopHelper():
     """
@@ -382,7 +382,7 @@ class RTTLoopHelper(LoopHelper):
     ### Main function: run ###
     ##########################
 
-    @rttutils.rtt_test
+    @utils.rtt_test
     def run(self):
         self.prepare_jobs()     # split files for each job, prepare relevants inputs (scale1fb, isData, etc)
 
@@ -557,7 +557,7 @@ class RTTLoopHelper(LoopHelper):
 
     def load_file(self, file, metadata, tree_name = "Events"):
         print("[RTTLoopHelper] Using RTT file loader")
-        with uproot.open(file, xrootd_handler=rttutils.RTTSource) as f:
+        with uproot.open(file, xrootd_handler=utils.RTTSource) as f:
             if not f:
                 print("[RTTLoopHelper] Problem opening file %s" % file)
                 return None

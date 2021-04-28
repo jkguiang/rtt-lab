@@ -1,9 +1,9 @@
 import uproot
 import argparse
 import json
-import rttutils
+from rtt import utils
 
-@rttutils.rtt_test
+@utils.rtt_test
 def run_root_test(server="172.17.0.2:1094", verbose=False):
     """
     Read all of the branches from the test.root file on the server using a modified 
@@ -13,7 +13,7 @@ def run_root_test(server="172.17.0.2:1094", verbose=False):
     # Define connection to XRootD file
     xrd_path = f"root://{server}//test.root"
     # Grab the file and read in the ttree object
-    uproot_file = uproot.open(xrd_path, xrootd_handler=rttutils.RTTSource)
+    uproot_file = uproot.open(xrd_path, xrootd_handler=utils.RTTSource)
     ttree = uproot_file["tree"]
     # Read all of the branches from this ttree
     floats = ttree["float"].array()
