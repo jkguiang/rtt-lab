@@ -86,4 +86,8 @@ Assuming we already ran the commands above, here is an example usage for `run.sh
 ```
 (rtt-env) [root@blah client]# ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
 ```
-As in the previous unit test example, if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the example above.
+As in the previous unit test example, if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the example above. Moreover, all additional arguments (i.e. arguments not explicitly used by `run.sh`) will be passed to the experiment. This can most easily be demonstrated by the Di-Higgs analysis example:
+```
+(rtt-env) [root@blah client]# ./run.sh --experiment=hgg_test --max_delay=50 --step_size=5 --server=172.17.0.3:1094 --nCores 1 --selections "HHggbb_boosted_Presel" --debug 1 --options "experiments/hgg/data/boosted_ggbb.json" --samples "experiments/hgg/data/samples_and_scale1fb.json" --output_tag "test"
+```
+In this case, all arguments past `--step_size` are passed to the experiment script `hgg_test.py`. Finally, for the sake of completeness, it should be noted that in the above example, the server was running at `172.17.0.3`, and of course, one would need to remove the `--server` argument or modify it depending on one's needs.
