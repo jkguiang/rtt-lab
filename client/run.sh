@@ -11,7 +11,7 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
-        --unittest) unittest=true; break;;
+        --unittest) unittest=true;;
         --min_delay) min_delay=${val};;
         --max_delay) max_delay=${val};;     
         --step_size) step_size=${val};;     
