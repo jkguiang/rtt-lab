@@ -1,4 +1,5 @@
 # Default values
+unittest=false
 min_delay=0
 max_delay=0
 step_size=1
@@ -9,6 +10,7 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
+        --unittest) unittest=true; shift; break;;
         --min_delay) min_delay=${val}; shift;;
         --max_delay) max_delay=${val}; shift;;     
         --step_size) step_size=${val}; shift;;     
@@ -16,8 +18,21 @@ for arg in "$@"; do
     esac    
 done
 
-# Run experiment
-if [[ -f experiments/${experiment}.py ]]; then
+if [[ "$unittest" = true ]]; then
+    # Run control
+    echo "Running simple_test.py ${@}"
+    python experiments/simple_test.py ${@}
+    # Add delay
+    echo "Adding a 10ms delay..."
+    tc qdisc add dev eth0 root netem delay 10ms
+    # Run 10ms-delayed test
+    echo "Running simple_test.py ${@}"
+    python experiments/simple_test.py ${@}
+    # Remove delay
+    echo "Removing the 10ms delay..."
+    tc qdisc del dev eth0 root netem delay 10ms
+    echo "Done."
+elif [[ -f experiments/${experiment}.py ]]; then
     # Generate list of delays in milliseconds
     delays_ms=$(seq ${min_delay} ${step_size} ${max_delay})
     # Make the outputs directory if it doesn't exist already
@@ -44,5 +59,17 @@ if [[ -f experiments/${experiment}.py ]]; then
 elif [[ ${experiment} != "" ]]; then
     echo "ERROR: experiments/${experiment}.py does not exist!"
 else
-    echo "Usage: ./run.sh --experiment=<name of experiment>"
+    echo "usage: ./run.sh --experiment=NAME [OPTIONAL ARGS] [ADDITIONAL ARGS]"
+    echo ""
+    echo "Run RTT lab experiment under a series of different delays"
+    echo ""
+    echo "required arguments:"
+    echo "  --experiment NAME        Name of experiment (e.g. experiments/foo.py --> foo)"
+    echo ""
+    echo "optional arguments:"
+    echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
+    echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
+    echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
+    echo ""
+    echo "All additional args are passed to the experiment"
 fi
