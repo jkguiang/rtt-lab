@@ -4,30 +4,32 @@ min_delay=0
 max_delay=0
 step_size=1
 experiment=""
+args=""
 
 # Parse arguments
 for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
-        --unittest) unittest=true; shift; break;;
-        --min_delay) min_delay=${val}; shift;;
-        --max_delay) max_delay=${val}; shift;;     
-        --step_size) step_size=${val}; shift;;     
-        --experiment) experiment=${val}; shift;;
-    esac    
+        --unittest) unittest=true; break;;
+        --min_delay) min_delay=${val};;
+        --max_delay) max_delay=${val};;     
+        --step_size) step_size=${val};;     
+        --experiment) experiment=${val};;
+        *) args+="$arg";;
+    esac
 done
 
 if [[ "$unittest" = true ]]; then
     # Run control
-    echo "Running simple_test.py ${@}"
-    python experiments/simple_test.py ${@}
+    echo "Running simple_test.py ${args}"
+    python experiments/simple_test.py ${args}
     # Add delay
     echo "Adding a 10ms delay..."
     tc qdisc add dev eth0 root netem delay 10ms
     # Run 10ms-delayed test
-    echo "Running simple_test.py ${@}"
-    python experiments/simple_test.py ${@}
+    echo "Running simple_test.py ${args}"
+    python experiments/simple_test.py ${args}
     # Remove delay
     echo "Removing the 10ms delay..."
     tc qdisc del dev eth0 root netem delay 10ms
@@ -40,8 +42,8 @@ elif [[ -f experiments/${experiment}.py ]]; then
     mkdir -p outputs/${experiment}
     # Run tests
     for delay_ms in ${delays_ms}; do
-        if [[ ${@} != "" ]]; then
-            echo "Running ${experiment}.py ${@} with a ${delay_ms}ms delay..."
+        if [[ ${args} != "" ]]; then
+            echo "Running ${experiment}.py ${args} with a ${delay_ms}ms delay..."
         else
             echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
         fi
@@ -49,7 +51,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
         tc qdisc add dev eth0 root netem delay ${delay_ms}ms
         # Run test
         output_json="outputs/${experiment}/${experiment}_${delay_ms}ms.json"
-        python experiments/${experiment}.py ${@} --output_json=${output_json}
+        python experiments/${experiment}.py ${args} --output_json=${output_json}
         # Remove delay
         tc qdisc del dev eth0 root netem delay ${delay_ms}ms
         # Compress output
