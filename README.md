@@ -75,7 +75,7 @@ Runtime: 2.930720090866089 seconds
 6. The runtime with the artificial network delay was longer! :tada:
 
 ## Running Experiments
-Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<test name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Here is an example usage:
+Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Here is an example usage:
 ```
 rtt-lab/client $ ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
 ```
