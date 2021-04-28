@@ -17,6 +17,7 @@ RUN $CONDA init
 # Configure conda
 RUN $CONDA config --set auto_activate_base false && $CONDA config --add channels conda-forge
 # Set up an environment
-RUN $CONDA create --name rtt-env -y && $CONDA install -n rtt-env -y uproot xrootd
+RUN $CONDA create --name rtt-env -y && \
+    $CONDA install -n rtt-env -y uproot xrootd awkward numba pandas
 
 WORKDIR /home
