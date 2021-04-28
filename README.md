@@ -48,7 +48,6 @@ rtt-lab/client $ docker exec -it rtt-client /bin/bash
 ```
 
 ## Running the Unit Test
-For a simple unit test, you can try the pre-written unit test found inside `client/experiments`.
 1. Use the client container interactively
 ```
 $ docker exec -it rtt-client /bin/bash
@@ -61,18 +60,19 @@ $ docker exec -it rtt-client /bin/bash
 ```
 [root@blah client]# conda activate rtt-env
 ```
-4. Run a control
-      - if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the examples below
+4. Run the unit test
+      - if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the example below
 ```
-(rtt-env) [root@blah client]# ./test.sh --delay=0
-Runtime: 0.14122414588928223 seconds
+(rtt-env) [root@blah client]# ./run.sh --unittest
+Running simple_test.py
+Runtime: 0.11977696418762207 seconds
+Adding a 10ms delay...
+Running simple_test.py
+Runtime: 3.2398319244384766 seconds
+Removing the 10ms delay...
+Done.
 ```
-5. Add an arbitrary delay (in ms)
-```
-(rtt-env) [root@blah client]# ./test.sh --delay=10
-Runtime: 2.930720090866089 seconds
-```
-6. The runtime with the artificial network delay was longer! :tada:
+5. The runtime with the artificial network delay was longer! :tada:
 
 ## Running Experiments
 Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Again, we need to hop onto the client container, navigate to the `client` directory, then activate our conda environment:
