@@ -81,7 +81,7 @@ $ docker exec -it rtt-client /bin/bash
 [root@blah home]# cd client
 [root@blah client]# conda activate rtt-env
 ```
-Here is an example usage:
+Assuming we already ran the commands above, here is an example usage for `run.sh`:
 ```
 (rtt-env) [root@blah client]# ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
 ```
