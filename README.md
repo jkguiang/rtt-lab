@@ -47,7 +47,7 @@ rtt-lab/client $ docker run -td -v $PWD:/home/$(basename $PWD) --user=root --cap
 rtt-lab/client $ docker exec -it rtt-client /bin/bash
 ```
 
-## Running tests
+## Running the Unit Test
 For a simple unit test, you can try the pre-written unit test found inside `client/experiments`.
 1. Use the client container interactively
 ```
@@ -62,34 +62,21 @@ $ docker exec -it rtt-client /bin/bash
 [root@blah client]# conda activate rtt-env
 ```
 4. Run a control
-      - if your server is not running at `172.17.0.2:1094`, you will need to edit `test.sh` to reflect this
+      - if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the examples below
 ```
-(rtt-env) [root@blah client]# ./test.sh 0
+(rtt-env) [root@blah client]# ./test.sh --delay=0
 Runtime: 0.14122414588928223 seconds
 ```
 5. Add an arbitrary delay (in ms)
 ```
-(rtt-env) [root@blah client]# ./test.sh 10
+(rtt-env) [root@blah client]# ./test.sh --delay=10
 Runtime: 2.930720090866089 seconds
 ```
 6. The runtime with the artificial network delay was longer! :tada:
 
-## Pointing to the Correct Server IP
-If the server is not running at `172.17.0.2:1094`, but instead at `172.17.0.X:1094` where `X != 2`, then you will need to edit the pre-written tests in order for them to work correctly. Any tests written in the future should be equally modifiable since the IP address can vary from time-to-time and machine-to-machine. For those comfortable with bash scripting and the like, simply take a look inside `client/test.sh` and `client/run.sh`. There, you will see that the unit test Python scripts have an argument `--server` that takes the address of the server. For everyone else, this means that the following changes must be made:
-1. Open `client/test.sh` and modify the `--server` argument passed to `client/experiments/simple_test.py`:
-```diff
-# Add delay
-tc qdisc add dev eth0 root netem delay ${1}ms
-# Run test
-- python experiments/simple_test.py --server="172.17.0.2:1094"
-+ python experiments/simple_test.py --server="172.17.0.X:1094"
-# Remove delay
-tc qdisc del dev eth0 root netem delay ${1}ms
+## Running Experiments
+Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Here is an example usage:
 ```
-2. Open `client/run.sh` and modify the `--server` argument ([here](https://github.com/jkguiang/rtt-lab/blob/main/client/run.sh#L17-L19) specifically) passed to the test being run:
-```diff
-python experiments/${experiment}.py \
--    --server="172.17.0.2:1094" \
-+    --server="172.17.0.X:1094" \
-    --output_json=${output_json}
+rtt-lab/client $ ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
 ```
+As in the previous unit test example, if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the example above.
