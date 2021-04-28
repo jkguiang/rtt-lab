@@ -5,8 +5,7 @@ step_size=5
 experiment=""
 
 # Parse arguments
-for arg in "$@"
-do
+for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
@@ -26,11 +25,11 @@ if [[ -f experiments/${experiment}.py ]]; then
     mkdir -p outputs/${experiment}
     # Run tests
     for delay_ms in ${delays_ms}; do
-	if [[ ${@} != "" ]]; then
-	    echo "Running ${experiment}.py ${@} with a ${delay_ms}ms delay..."
-	else
-	    echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
-	fi
+        if [[ ${@} != "" ]]; then
+            echo "Running ${experiment}.py ${@} with a ${delay_ms}ms delay..."
+        else
+            echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
+        fi
         # Add delay
         tc qdisc add dev eth0 root netem delay ${delay_ms}ms
         # Run test
