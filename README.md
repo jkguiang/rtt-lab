@@ -18,7 +18,7 @@ rtt-lab/server $ docker build -t rtt-server .
       - `-v ...` mounts the inputs directory to the container with read/write privileges such that the server can serve those files
       - `--name=rtt-server` gives the container a human-readable name
 ```
-rtt-lab/server $ docker run -td -v ./inputs:/data --user=root --name=rtt-server rtt-server
+rtt-lab/server $ docker run -td -v $PWD/inputs:/data --user=root --name=rtt-server rtt-server
 ```
 5. Check the server information
       - if you changed the name of the server container, you will need to edit `inspect.py` to reflect this before running
