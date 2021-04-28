@@ -1,7 +1,7 @@
 # Default values
 min_delay=0
-max_delay=50
-step_size=5
+max_delay=0
+step_size=1
 experiment=""
 
 # Parse arguments
