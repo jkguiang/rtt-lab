@@ -1,28 +1,49 @@
-experiment=${1}
+# Default values
+min_delay=0
+max_delay=50
+step_size=5
+experiment=""
 
-if [[ "${experiment}" != "" ]]; then
-    # Delays will be multiples of 5
-    delays_x5ms=$(seq 0 10)
+# Parse arguments
+for arg in "$@"
+do
+    key=$(echo $arg | cut -f1 -d=)
+    val=$(echo $arg | cut -f2 -d=)   
+    case "$key" in
+        --min_delay) min_delay=${val}; shift;;
+        --max_delay) max_delay=${val}; shift;;     
+        --step_size) step_size=${val}; shift;;     
+        --experiment) experiment=${val}; shift;;
+    esac    
+done
+
+# Run experiment
+if [[ -f experiments/${experiment}.py ]]; then
+    # Generate list of delays in milliseconds
+    delays_ms=$(seq ${min_delay} ${step_size} ${max_delay})
     # Make the outputs directory if it doesn't exist already
     mkdir -p outputs
     mkdir -p outputs/${experiment}
     # Run tests
-    for delay_x5ms in ${delays_x5ms}; do
-        delay_ms=$((${delay_x5ms}*5))
-        echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
-        output_json="outputs/${experiment}/${experiment}_${delay_ms}ms.json"
+    for delay_ms in ${delays_ms}; do
+	if [[ ${@} != "" ]]; then
+	    echo "Running ${experiment}.py ${@} with a ${delay_ms}ms delay..."
+	else
+	    echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
+	fi
         # Add delay
         tc qdisc add dev eth0 root netem delay ${delay_ms}ms
         # Run test
-        python experiments/${experiment}.py \
-            --server="172.17.0.2:1094" \
-            --output_json=${output_json}
+        output_json="outputs/${experiment}/${experiment}_${delay_ms}ms.json"
+        python experiments/${experiment}.py ${@} --output_json=${output_json}
         # Remove delay
         tc qdisc del dev eth0 root netem delay ${delay_ms}ms
         # Compress output
         gzip -f ${output_json}
-        echo "Done."
+        echo "Done. Saved report to ${output_json}.gz"
     done
+elif [[ ${experiment} != "" ]]; then
+    echo "ERROR: experiments/${experiment}.py does not exist!"
 else
-    echo "Usage: ./run.sh <name of experiment>"
+    echo "Usage: ./run.sh --experiment=<name of experiment>"
 fi
