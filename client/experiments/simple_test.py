@@ -1,9 +1,9 @@
 import uproot
 import argparse
 import json
-from rtt import utils
+import rtt
 
-@utils.rtt_test
+@rtt.wrappers.rtt_test()
 def run_simple_test(server="172.17.0.2:1094", chunk_size=4, verbose=False):
     """
     Read the test.dat file on the server chunk-by-chunk using Uproot's XRootD 
