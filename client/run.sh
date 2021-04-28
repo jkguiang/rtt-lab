@@ -16,7 +16,7 @@ for arg in "$@"; do
         --max_delay) max_delay=${val};;     
         --step_size) step_size=${val};;     
         --experiment) experiment=${val};;
-        *) args+="$arg";;
+        *) args+="$arg ";;
     esac
 done
 
