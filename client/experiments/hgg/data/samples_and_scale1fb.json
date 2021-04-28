@@ -1,0 +1,18 @@
+{
+    "TTbar": {
+        "2018": {
+            "metadata": {
+                "n_events": 138776675,
+                "scale1fb": 2.858156567478099e-06,
+                "sumWeights": 291012749079,
+                "xs": 831.76
+            },
+            "paths": [
+                "ttbar2018_hggskim.root"
+            ]
+        },
+        "fpo": 1,
+        "process_id": 5,
+        "resonant": false
+    }
+}
