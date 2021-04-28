@@ -75,8 +75,14 @@ Runtime: 2.930720090866089 seconds
 6. The runtime with the artificial network delay was longer! :tada:
 
 ## Running Experiments
-Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Here is an example usage:
+Several experiments have been designed to more rigorously simulate actual Physics use cases. Each of these tests is named `<name>_test.py` and placed in `client/experiments` (e.g. `client/experiments/root_test.py`). There is a bash script called `run.sh` in the `client` directory which allows you to run any of these experiments for a series of artificial `netem` delays. Again, we need to hop onto the client container, navigate to the `client` directory, then activate our conda environment:
 ```
-rtt-lab/client $ ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
+$ docker exec -it rtt-client /bin/bash
+[root@blah home]# cd client
+[root@blah client]# conda activate rtt-env
+```
+Here is an example usage:
+```
+(rtt-env) [root@blah client]# ./run.sh --experiment=root_test --min_delay=5 --max_delay=10 --step_size=1
 ```
 As in the previous unit test example, if your server is running at `172.17.0.X:1094`, where `X != 2`, you will need to add `--server=172.17.0.X:1094` to the example above.
