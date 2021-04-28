@@ -90,4 +90,4 @@ As in the previous unit test example, if your server is running at `172.17.0.X:1
 ```
 (rtt-env) [root@blah client]# ./run.sh --experiment=hgg_test --max_delay=50 --step_size=5 --server=172.17.0.3:1094 --nCores 1 --selections "HHggbb_boosted_Presel" --debug 1 --options "experiments/hgg/data/boosted_ggbb.json" --samples "experiments/hgg/data/samples_and_scale1fb.json" --output_tag "test"
 ```
-In this case, all arguments past `--step_size` are passed to the experiment script `hgg_test.py`. Finally, for the sake of completeness, it should be noted that in the above example, the server was running at `172.17.0.3`, and of course, one would need to remove this or modify this depending on one's needs.
+In this case, all arguments past `--step_size` are passed to the experiment script `hgg_test.py`. Finally, for the sake of completeness, it should be noted that in the above example, the server was running at `172.17.0.3`, and of course, one would need to remove the `--server` argument or modify it depending on one's needs.
