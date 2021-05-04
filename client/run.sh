@@ -3,6 +3,7 @@ unittest=false
 min_delay=0
 max_delay=0
 step_size=1
+n_reps=1
 experiment=""
 args=""
 
@@ -15,6 +16,7 @@ for arg in "$@"; do
         --min_delay) min_delay=${val};;
         --max_delay) max_delay=${val};;     
         --step_size) step_size=${val};;     
+        --n_reps) n_reps=${val};;
         --experiment) experiment=${val};;
         *) args+="$arg ";;
     esac
@@ -42,21 +44,23 @@ elif [[ -f experiments/${experiment}.py ]]; then
     mkdir -p outputs/${experiment}
     # Run tests
     for delay_ms in ${delays_ms}; do
-        if [[ ${args} != "" ]]; then
-            echo "Running ${experiment}.py ${args} with a ${delay_ms}ms delay..."
-        else
-            echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
-        fi
-        # Add delay
-        tc qdisc add dev eth0 root netem delay ${delay_ms}ms
-        # Run test
-        output_json="outputs/${experiment}/${experiment}_${delay_ms}ms.json"
-        python experiments/${experiment}.py ${args} --output_json=${output_json}
-        # Remove delay
-        tc qdisc del dev eth0 root netem delay ${delay_ms}ms
-        # Compress output
-        gzip -f ${output_json}
-        echo "Done. Saved report to ${output_json}.gz"
+        for rep in $(seq 1 ${n_reps}); do
+            if [[ ${args} != "" ]]; then
+                echo "Running ${experiment}.py ${args} with a ${delay_ms}ms delay..."
+            else
+                echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
+            fi
+            # Add delay
+            tc qdisc add dev eth0 root netem delay ${delay_ms}ms
+            # Run test
+            output_json="outputs/${experiment}/${experiment}_${delay_ms}ms_rep${rep}.json"
+            python experiments/${experiment}.py ${args} --output_json=${output_json}
+            # Remove delay
+            tc qdisc del dev eth0 root netem delay ${delay_ms}ms
+            # Compress output
+            gzip -f ${output_json}
+            echo "Done. Saved report to ${output_json}.gz"
+        done
     done
 elif [[ ${experiment} != "" ]]; then
     echo "ERROR: experiments/${experiment}.py does not exist!"
