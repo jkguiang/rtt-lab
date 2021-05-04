@@ -44,6 +44,8 @@ elif [[ -f experiments/${experiment}.py ]]; then
     mkdir -p outputs/${experiment}
     # Run tests
     for delay_ms in ${delays_ms}; do
+        output_dir=outputs/${experiment}/${delay_ms}ms
+        mkdir -p ${output_dir}
         for rep in $(seq 1 ${n_reps}); do
             if [[ ${args} != "" ]]; then
                 echo "Running ${experiment}.py ${args} with a ${delay_ms}ms delay..."
@@ -53,7 +55,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
             # Add delay
             tc qdisc add dev eth0 root netem delay ${delay_ms}ms
             # Run test
-            output_json="outputs/${experiment}/${experiment}_${delay_ms}ms_rep${rep}.json"
+            output_json="${output_dir}/${experiment}_${delay_ms}ms_rep${rep}.json"
             python experiments/${experiment}.py ${args} --output_json=${output_json}
             # Remove delay
             tc qdisc del dev eth0 root netem delay ${delay_ms}ms
