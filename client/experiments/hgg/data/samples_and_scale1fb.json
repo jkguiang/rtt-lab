@@ -8,10 +8,34 @@
                 "xs": 831.76
             },
             "paths": [
-                "ttbar2018_hggskim.root"
+                "ttbar2018_hggskim_0.root",
+                "ttbar2018_hggskim_1.root",
+                "ttbar2018_hggskim_2.root",
+                "ttbar2018_hggskim_3.root",
+                "ttbar2018_hggskim_4.root",
+                "ttbar2018_hggskim_5.root",
+                "ttbar2018_hggskim_6.root",
+                "ttbar2018_hggskim_7.root",
+                "ttbar2018_hggskim_8.root",
+                "ttbar2018_hggskim_9.root",
+                "ttbar2018_hggskim_10.root",
+                "ttbar2018_hggskim_11.root",
+                "ttbar2018_hggskim_12.root",
+                "ttbar2018_hggskim_13.root",
+                "ttbar2018_hggskim_14.root",
+                "ttbar2018_hggskim_15.root",
+                "ttbar2018_hggskim_16.root",
+                "ttbar2018_hggskim_17.root",
+                "ttbar2018_hggskim_18.root",
+                "ttbar2018_hggskim_19.root",
+                "ttbar2018_hggskim_20.root",
+                "ttbar2018_hggskim_21.root",
+                "ttbar2018_hggskim_22.root",
+                "ttbar2018_hggskim_23.root",
+                "ttbar2018_hggskim_24.root"
             ]
         },
-        "fpo": 1,
+        "fpo": 10,
         "process_id": 5,
         "resonant": false
     }
