@@ -16,7 +16,7 @@ def run_simple_test(server="172.17.0.2:1094", chunk_size=4, verbose=False):
     n_bytes = xrd_resource.num_bytes
     byte_ranges = [(b, min(b+chunk_size, n_bytes)) 
                    for b in range(0, n_bytes, chunk_size)]
-    report = {"reads": [], "runtime": -999}
+    report = {"reads": [], "file": xrd_path}
     for start, stop in byte_ranges:
         bytes_in = xrd_resource.get(start=start, stop=stop)
         if verbose:
