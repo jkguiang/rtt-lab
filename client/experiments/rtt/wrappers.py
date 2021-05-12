@@ -10,19 +10,21 @@ class rtt_test:
         self.multiple_files=multiple_files
 
     def __call__(self, func):
+        report = {"file_reports": [], "runtime": -999}
         if self.multiple_files:
             def wrapped_func(*args, **kwargs):
-                report = {"file_reports": [], "runtime": -999}
                 t0 = time.time()
-                report["file_reports"] = func(*args, **kwargs)
+                file_reports = func(*args, **kwargs)
                 t1 = time.time()
+                report["file_reports"] = file_reports
                 report["runtime"] = t1 - t0
                 return report
         else:
             def wrapped_func(*args, **kwargs):
                 t0 = time.time()
-                report = func(*args, **kwargs)
+                file_report = func(*args, **kwargs)
                 t1 = time.time()
+                report["file_reports"] = [file_report]
                 report["runtime"] = t1 - t0
                 return report
 
