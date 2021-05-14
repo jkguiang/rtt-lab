@@ -5,6 +5,7 @@ max_delay=0
 step_size=1
 n_reps=1
 experiment=""
+tag=""
 args=""
 
 # Parse arguments
@@ -18,10 +19,12 @@ for arg in "$@"; do
         --step_size) step_size=${val};;     
         --n_reps) n_reps=${val};;
         --experiment) experiment=${val};;
+        --tag) tag="_${val}";;
         *) args+="$arg ";;
     esac
 done
-
+# Remove all previously set rules
+tc qdisc del dev eth0 root
 if [[ "$unittest" = true ]]; then
     # Run control
     echo "Running simple_test.py ${args}"
@@ -41,11 +44,29 @@ elif [[ -f experiments/${experiment}.py ]]; then
     delays_ms=$(seq ${min_delay} ${step_size} ${max_delay})
     # Make the outputs directory if it doesn't exist already
     mkdir -p outputs
-    mkdir -p outputs/${experiment}
+    # Safeguard against accidental overwriting
+    output_dir=outputs/${experiment}${tag}
+    while [ -d ${output_dir} ]; do
+        echo "Warning: this could may overwrite files in ${output_dir}"
+        read -p "Replace current tag? (y/n/abort): " resp
+        if [[ ${resp} == [yY] ]]; then
+            read -p "Please enter a new or different tag: " new_tag
+            if [[ "${new_tag}" != "" ]]; then
+                output_dir=outputs/${experiment}_${new_tag}
+                echo "Writing to ${output_dir} instead"
+            fi
+        elif [[ ${resp} == [nN] ]]; then
+            break
+        elif [[ "${resp}" == "abort" ]]; then
+            exit 0
+        fi
+    done
+    # Make directory for this experiment's outputs
+    mkdir -p ${output_dir}
     # Run tests
     for delay_ms in ${delays_ms}; do
-        output_dir=outputs/${experiment}/${delay_ms}ms
-        mkdir -p ${output_dir}
+        ms_output_dir=${output_dir}/${delay_ms}ms
+        mkdir -p ${ms_output_dir}
         for rep in $(seq 1 ${n_reps}); do
             if [[ ${args} != "" ]]; then
                 echo "Running ${experiment}.py ${args} with a ${delay_ms}ms delay..."
@@ -55,7 +76,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
             # Add delay
             tc qdisc add dev eth0 root netem delay ${delay_ms}ms
             # Run test
-            output_json="${output_dir}/${experiment}_${delay_ms}ms_rep${rep}.json"
+            output_json="${ms_output_dir}/report_${rep}.json"
             python experiments/${experiment}.py ${args} --output_json=${output_json}
             # Remove delay
             tc qdisc del dev eth0 root netem delay ${delay_ms}ms
