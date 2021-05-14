@@ -4,13 +4,14 @@ import json
 import rtt
 
 @rtt.wrappers.rtt_test()
-def run_simple_test(server="172.17.0.2:1094", chunk_size=4, verbose=False):
+def run_simple_test(server="172.17.0.2:1094", input_file="test_1000ints.dat", 
+                    chunk_size=4):
     """
     Read the test.dat file on the server chunk-by-chunk using Uproot's XRootD 
     file handler
     """
     # Define connection to XRootD file
-    xrd_path = f"root://{server}//test.dat"
+    xrd_path = f"root://{server}//{input_file}"
     xrd_resource = uproot.source.xrootd.XRootDResource(xrd_path, timeout=None)
     # Read in chunk-by-chunk
     n_bytes = xrd_resource.num_bytes
@@ -19,8 +20,6 @@ def run_simple_test(server="172.17.0.2:1094", chunk_size=4, verbose=False):
     report = {"reads": [], "file": xrd_path}
     for start, stop in byte_ranges:
         bytes_in = xrd_resource.get(start=start, stop=stop)
-        if verbose:
-            print(bytes_in)
         d = dict(which="chunk", start=start, stop=stop, nbytes=stop-start)
         report["reads"].append(d)
 
@@ -30,11 +29,6 @@ if __name__ == "__main__":
     # CLI
     cli = argparse.ArgumentParser(description="Run RTT Lab unit test")
     cli.add_argument(
-        "-v", "--verbose",
-        action="store_true", default=False,
-        help="Print verbose output"
-    )
-    cli.add_argument(
         "-o", "--output_json", 
         type=str, default="",
         help="Name of output JSON on client"
@@ -43,6 +37,11 @@ if __name__ == "__main__":
         "--server", 
         type=str, default="172.17.0.2:1094",
         help="<IP>:<port> of server"
+    )
+    cli.add_argument(
+        "--input_file", 
+        type=str, default="test.dat",
+        help="Path to input file on server"
     )
     cli.add_argument(
         "--chunk_size", 
@@ -55,8 +54,8 @@ if __name__ == "__main__":
     # Run test
     report = run_simple_test(
         server=args.server, 
-        chunk_size=args.chunk_size, 
-        verbose=args.verbose
+        input_file=args.input_file, 
+        chunk_size=args.chunk_size
     )
     # Write out report
     if args.output_json:
