@@ -15,6 +15,6 @@ class RTTSource(uproot.source.xrootd.XRootDSource):
         return super().chunk(start, stop)
 
     def chunks(self, ranges, notifications):
-        d = dict(which="chunk", ranges=ranges)
+        d = dict(which="chunks", ranges=ranges)
         self.report["reads"].append(d)
         return super().chunks(ranges, notifications)

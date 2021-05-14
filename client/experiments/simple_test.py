@@ -44,11 +44,20 @@ if __name__ == "__main__":
         type=str, default="172.17.0.2:1094",
         help="<IP>:<port> of server"
     )
+    cli.add_argument(
+        "--chunk_size", 
+        type=int, default=4,
+        help="Size of chunks to read in"
+    )
 
     # Get args
     args = cli.parse_args()
     # Run test
-    report = run_simple_test(server=args.server, verbose=args.verbose)
+    report = run_simple_test(
+        server=args.server, 
+        chunk_size=args.chunk_size, 
+        verbose=args.verbose
+    )
     # Write out report
     if args.output_json:
         with open(args.output_json, "w") as f_out:
