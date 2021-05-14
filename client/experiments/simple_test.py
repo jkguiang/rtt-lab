@@ -40,7 +40,7 @@ if __name__ == "__main__":
     )
     cli.add_argument(
         "--input_file", 
-        type=str, default="test.dat",
+        type=str, default="test_1000ints.dat",
         help="Path to input file on server"
     )
     cli.add_argument(
