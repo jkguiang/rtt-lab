@@ -99,6 +99,7 @@ else
     echo "  --experiment NAME        Name of experiment (e.g. experiments/foo.py --> foo)"
     echo ""
     echo "optional arguments:"
+    echo "  -f                       silence any overwrite warnings"
     echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
     echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
     echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
