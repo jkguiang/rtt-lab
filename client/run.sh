@@ -1,4 +1,5 @@
 # Default values
+force=false
 unittest=false
 min_delay=0
 max_delay=0
@@ -13,6 +14,7 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
+        -f) force=true;;
         --unittest) unittest=true;;
         --min_delay) min_delay=${val};;
         --max_delay) max_delay=${val};;     
@@ -24,7 +26,8 @@ for arg in "$@"; do
     esac
 done
 # Remove all previously set rules
-tc qdisc del dev eth0 root
+tc qdisc del dev eth0 root > /dev/null 2>&1
+
 if [[ "$unittest" = true ]]; then
     # Run control
     echo "Running simple_test.py ${args}"
@@ -46,7 +49,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
     mkdir -p outputs
     # Safeguard against accidental overwriting
     output_dir=outputs/${experiment}${tag}
-    while [ -d ${output_dir} ]; do
+    while [[ -d ${output_dir} && ${force} = false ]]; do
         echo "Warning: this could may overwrite files in ${output_dir}"
         read -p "Replace current tag? (y/n/abort): " resp
         if [[ ${resp} == [yY] ]]; then
@@ -99,6 +102,7 @@ else
     echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
     echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
     echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
+    echo "  --tag TAG                unique tag for this run (i.e. outputs/foo_{TAG}/...)"
     echo ""
     echo "All additional args are passed to the experiment"
 fi
