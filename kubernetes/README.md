@@ -78,3 +78,4 @@ $ kubectl exec -it <client pod name with hash> -- /bin/bash
 - Kansas: `osg.kans.nrp.internet2.edu`
 - New York: `osg.newy32aoa.nrp.internet2.edu`
 - Santa Cruz: `siderea.ucsc.edu`
+- :trident: San Diego: `stashcache.t2.ucsd.edu`
