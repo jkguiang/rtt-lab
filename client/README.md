@@ -17,13 +17,15 @@ required arguments:
 
 optional arguments:
   -f                       silence any overwrite warnings
-  --unittest               run simple_test.py (with any additional args) once with a 0ms delay and
-                           again with a 10ms delay
+  --unittest               run simple_test.py (with any additional args) once
+                           with a 0ms delay and again with a 10ms delay
   --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)
   --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)
   --step_size STEP SIZE    step size in going from min to max delay (default: 1)
-  --n_reps NUM REPS        number of times that a test should be repeated for a given netem delay
-  --tag TAG                unique tag for this run (i.e. output written to outputs/foo_{TAG}/...)
+  --n_reps NUM REPS        number of times that a test should be repeated for
+                           a given netem delay (default: 1)
+  --tag TAG                unique tag for this run, such that output is written
+                           to outputs/foo_{TAG}/ (default: '')
 
 All additional args are passed to the experiment
 ```
@@ -51,6 +53,7 @@ outputs/simple_test_chunk1KB_file12KB/
     |- ...
     +- report_5.json.gz
 ```
+Note, in particular, that `--tag=chunk1KB_file12KB` gave us a nicely identifiable output directory. This allows the us to run the same test for many different configurations.
 
 ## Writing tests
 Tests should be consolidated to a single file written to the `experiments` directory. In that file, there should be a single function that runs the relevant code for the test. This function must then be wrapped by the `rtt_test` wrapper, which will enforce the requirement that each test return a dictionary wherein it will write the test's runtime. Lastly, each test should have the following options in its CLI:
