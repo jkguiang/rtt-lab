@@ -57,7 +57,7 @@ $ kubectl exec -it <client pod name with hash> -- /bin/bash
 ```
 5. Run tests! See the [main](https://github.com/jkguiang/rtt-lab/blob/main/README.md)/[client](https://github.com/jkguiang/rtt-lab/blob/main/client/README.md) READMEs for more.
 
-# Useful commands for Kubernetes newbies
+## Useful commands for Kubernetes newbies
 - Make a configmap: `kubectl create configmap <configmap name> --from-file=<path to file> -n <namespace>`
 
 - List configmaps: `kubectl get configmaps`
@@ -71,3 +71,10 @@ $ kubectl exec -it <client pod name with hash> -- /bin/bash
 - Hop onto a pod: `kubectl exec -it <pod name with hash> -- /bin/bash`
 
 - List pods: `kubectl get pods`
+
+## PRP locations
+- Amsterdam: `fiona-r-uva.vlan7.uvalight.net`
+- Chicago: `osg.chic.nrp.internet2.edu`
+- Kansas: `osg.kans.nrp.internet2.edu`
+- New York: `osg.newy32aoa.nrp.internet2.edu`
+- Santa Cruz: `siderea.ucsc.edu`
