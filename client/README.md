@@ -17,7 +17,7 @@ required arguments:
 
 optional arguments:
   -f                       silence any overwrite warnings
-  --unittest               run simple_test.py with any additional args once with a 0ms delay and
+  --unittest               run simple_test.py (with any additional args) once with a 0ms delay and
                            again with a 10ms delay
   --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)
   --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)

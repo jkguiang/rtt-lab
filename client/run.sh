@@ -100,7 +100,7 @@ else
     echo ""
     echo "optional arguments:"
     echo "  -f                       silence any overwrite warnings"
-    echo "  --unittest               run simple_test.py with any additional args once with a 0ms delay and "
+    echo "  --unittest               run simple_test.py (with any additional args) once with a 0ms delay and"
     echo "                           again with a 10ms delay"
     echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
     echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
