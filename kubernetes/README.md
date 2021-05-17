@@ -21,9 +21,10 @@ kubectl create -f rtt-server.yaml
 4. Log into the pod, untar the inputs directory, and move it to the server area
 ```
 $ kubectl exec -it <server pod name with hash> -- /bin/bash
+[root@rtt-server-5b7f49b87f-fqvw2 /]# cd home
 [root@rtt-server-5b7f49b87f-fqvw2 home]# tar -zxvf inputs.tar.gz
-[root@rtt-server-5b7f49b87f-fqvw2 home]# mv inputs/* /data/
-[root@rtt-server-5b7f49b87f-fqvw2 home]# rm -r inputs
+[root@rtt-server-5b7f49b87f-fqvw2 home]# mv server/inputs/* /data/
+[root@rtt-server-5b7f49b87f-fqvw2 home]# rm -r server
 [root@rtt-server-5b7f49b87f-fqvw2 home]# exit
 ```
 5. Note the server IP
