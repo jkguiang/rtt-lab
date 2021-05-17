@@ -58,7 +58,7 @@ Note, in particular, that `--tag=chunk1KB_file12KB` gave us a nicely identifiabl
 ## Writing tests
 Tests should be consolidated to a single file written to the `experiments` directory. In that file, there should be a single function that runs the relevant code for the test. This function must then be wrapped by the `rtt_test` wrapper, which will enforce the requirement that each test return a dictionary wherein it will write the test's runtime. Lastly, each test should have the following options in its CLI:
 1. `--output_json`: path to the output JSON file
-2. `--server`: <IP>:<port> of server
+2. `--server`: `<IP address>:<port number>` of server
 
 These options necessary because they are automatically passed to the test script by `run.sh`. Then, every test should write the report returned by the wrapped main function to the file given by `--output_json`. As mentioned before, additional CLI options that are _not_ used by `run.sh` are passed to the test script such that tests are still configurable from the command line. Lastly, every test must use the XRootD client Python API in order to access the files on the XRootD server. This is included in `uproot`, which is installed in the `rtt-env` conda environment. A wrapper of the XRootD source object is included specifically for RTT tests (cf. [here](https://github.com/jkguiang/rtt-lab/blob/main/client/experiments/rtt/objects.py)). This wrapper writes the bytes (both vector and regular chunks) read for each read to a dictionary that can be accessed as follows:
 ```python
