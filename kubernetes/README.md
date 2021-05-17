@@ -31,7 +31,6 @@ $ kubectl exec -it <server pod name with hash> -- /bin/bash
 ```
 $ kubectl get pods -o wide
 NAME                          READY   STATUS    RESTARTS   AGE     IP               NODE                     NOMINATED NODE   READINESS GATES
-rtt-client-5d595d59cf-62gz9   1/1     Running   0          2d17h   10.244.135.91    stashcache.t2.ucsd.edu   <none>           <none>
 rtt-server-5b7f49b87f-fqvw2   1/1     Running   0          2d18h   10.244.135.105   stashcache.t2.ucsd.edu   <none>           <none>
 ```
 In the example above, we see that we will need to specify `--server=10.244.135.105:1094` when we run our tests on the client pod.
