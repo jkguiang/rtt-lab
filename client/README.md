@@ -2,11 +2,11 @@
 Only Python tests can be run by `run.sh`, so any non-Python scripts have be run manually. Therefore, the following instructions will only pertain to new Python tests, as any other tests are completely left to the user's discretion.
 
 ## Running tests
-In order to _run_ any tests, you first need to hop onto the client container (assuming it's already running). This command is given in the main README, but we include it here as well for convenience.
+In order to _run_ any tests, you first need to hop onto the client container (assuming it's already running). This command is given in the main README, but we include it here as well for convenience:
 ```
 docker exec -it rtt-client /bin/bash
 ```
-Once on the container, `run.sh` can be used to access and run any tests in the `experiments` directory. The usage instructions are included here for convenience:
+Once on the container, `run.sh` can be used to access and run any tests in the `experiments` directory. The usage instructions are  as follows:
 ```
 usage: ./run.sh --experiment=NAME [OPTIONAL ARGS] [ADDITIONAL ARGS]
 
@@ -16,6 +16,7 @@ required arguments:
   --experiment NAME        Name of experiment (e.g. experiments/foo.py --> foo)
 
 optional arguments:
+  -h                       display this message
   -f                       silence any overwrite warnings
   --unittest               run simple_test.py (with any additional args) once
                            with a 0ms delay and again with a 10ms delay
