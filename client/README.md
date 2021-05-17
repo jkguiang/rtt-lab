@@ -53,7 +53,7 @@ outputs/simple_test_chunk1KB_file12KB/
     |- ...
     +- report_5.json.gz
 ```
-Note, in particular, that `--tag=chunk1KB_file12KB` gave us a nicely identifiable output directory. This allows the us to run the same test for many different configurations.
+Note, in particular, that `--tag=chunk1KB_file12KB` gave us a nicely identifiable output directory. This allows us to save the output from the same test for many different configurations.
 
 ## Writing tests
 Tests should be consolidated to a single file written to the `experiments` directory. In that file, there should be a single function that runs the relevant code for the test. This function must then be wrapped by the `rtt_test` wrapper, which will enforce the requirement that each test return a dictionary wherein it will write the test's runtime. Lastly, each test should have the following options in its CLI:
