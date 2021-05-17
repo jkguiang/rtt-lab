@@ -1,4 +1,4 @@
-# RTT Lab
+# RTT Lab: Client
 Only Python tests can be run by `run.sh`, so any non-Python scripts have be run manually. Therefore, the following instructions will only pertain to new Python tests, as any other tests are completely left to the user's discretion.
 
 ## Running tests
