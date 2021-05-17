@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: rtt-client
+  name: rtt-client
+  namespace: cms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: rtt-client
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8s-app: rtt-client
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        key: nautilus.io/stashcache
+        operator: Exists
+      containers:
+      - image: jguiang/rtt-client:latest
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
+        imagePullPolicy: Always
+        name: rtt-client
+        resources:
+          limits:
+            cpu: 4
+            memory: 4Gi
+          requests:
+            cpu: 2
+            memory: 2Gi
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        volumeMounts:
+        - mountPath: /home/
+          name: cache-vol
+        - mountPath: /home/client.tar.gz
+          name: rtt-client-configmap
+          subPath: client.tar.gz
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: stashcache.t2.ucsd.edu
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: cache-vol
+        emptyDir: {}
+      - name: rtt-client-configmap
+        configMap: 
+          name: rtt-client-configmap
+          items:
+          - key: client.tar.gz
+            path: client.tar.gz
+          defaultMode: 0777

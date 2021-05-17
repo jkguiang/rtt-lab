@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: rtt-server
+  name: rtt-server
+  namespace: cms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: rtt-server
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8s-app: rtt-server
+    spec:
+      tolerations:
+      - effect: NoSchedule
+        key: nautilus.io/stashcache
+        operator: Exists
+      containers:
+      - image: jguiang/rtt-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1094
+        name: rtt-server
+        resources:
+          limits:
+            cpu: 4
+            memory: 500Mi
+          requests:
+            cpu: 2
+            memory: 250Mi
+        volumeMounts:
+        - mountPath: /home/
+          name: cache-vol
+        - mountPath: /home/inputs.tar.gz
+          name: rtt-inputs-configmap
+          subPath: inputs.tar.gz
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/hostname: stashcache.t2.ucsd.edu
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: cache-vol
+        emptyDir: {}
+      - name: rtt-inputs-configmap
+        configMap: 
+          name: rtt-inputs-configmap
+          items:
+          - key: inputs.tar.gz
+            path: inputs.tar.gz
+          defaultMode: 0777
