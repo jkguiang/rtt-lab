@@ -1,4 +1,31 @@
+#!/bin/bash
+
+print_help() {
+    echo "usage: ./run.sh --experiment=NAME [OPTIONAL ARGS] [ADDITIONAL ARGS]"
+    echo ""
+    echo "Run RTT lab experiment under a series of different delays"
+    echo ""
+    echo "required arguments:"
+    echo "  --experiment NAME        Name of experiment (e.g. experiments/foo.py --> foo)"
+    echo ""
+    echo "optional arguments:"
+    echo "  -h                       display this message"
+    echo "  -f                       silence any overwrite warnings"
+    echo "  --unittest               run simple_test.py (with any additional args) once"
+    echo "                           with a 0ms delay and again with a 10ms delay"
+    echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
+    echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
+    echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
+    echo "  --n_reps NUM REPS        number of times that a test should be repeated for"
+    echo "                           a given netem delay (default: 1)"
+    echo "  --tag TAG                unique tag for this run, such that output is written"
+    echo "                           to outputs/foo_{TAG}/ (default: '')"
+    echo ""
+    echo "All additional args are passed to the experiment"
+}
+
 # Default values
+help=false
 force=false
 unittest=false
 min_delay=0
@@ -14,6 +41,7 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
+        -h) help=true;;
         -f) force=true;;
         --unittest) unittest=true;;
         --min_delay) min_delay=${val};;
@@ -28,7 +56,9 @@ done
 # Remove all previously set rules
 tc qdisc del dev eth0 root > /dev/null 2>&1
 
-if [[ "$unittest" = true ]]; then
+if [[ ${help} = true ]]; then
+    print_help
+elif [[ ${unittest} = true ]]; then
     # Run control
     echo "Running simple_test.py ${args}"
     python experiments/simple_test.py ${args}
@@ -91,24 +121,5 @@ elif [[ -f experiments/${experiment}.py ]]; then
 elif [[ ${experiment} != "" ]]; then
     echo "ERROR: experiments/${experiment}.py does not exist!"
 else
-    echo "usage: ./run.sh --experiment=NAME [OPTIONAL ARGS] [ADDITIONAL ARGS]"
-    echo ""
-    echo "Run RTT lab experiment under a series of different delays"
-    echo ""
-    echo "required arguments:"
-    echo "  --experiment NAME        Name of experiment (e.g. experiments/foo.py --> foo)"
-    echo ""
-    echo "optional arguments:"
-    echo "  -f                       silence any overwrite warnings"
-    echo "  --unittest               run simple_test.py (with any additional args) once"
-    echo "                           with a 0ms delay and again with a 10ms delay"
-    echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
-    echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
-    echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
-    echo "  --n_reps NUM REPS        number of times that a test should be repeated for"
-    echo "                           a given netem delay (default: 1)"
-    echo "  --tag TAG                unique tag for this run, such that output is written"
-    echo "                           to outputs/foo_{TAG}/ (default: '')"
-    echo ""
-    echo "All additional args are passed to the experiment"
+    print_help
 fi
