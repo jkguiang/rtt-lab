@@ -10,17 +10,17 @@ NOTE: if you add input files such that the inputs directory becomes larger than 
 
 2. Make a configmap that points to the tarball we just made
 ```
-kubectl create configmap rtt-client-configmap --from-file=client.tar.gz
+kubectl create configmap rtt-inputs-configmap --from-file=inputs.tar.gz
 ```
 Don't forget to include `-n <namespace>` if needed on your system.
 
 3. Create the pod
 ```
-kubectl create -f rtt-client.yaml
+kubectl create -f rtt-server.yaml
 ```
 4. Log into the pod, untar the inputs directory, and move it to the server area
 ```
-$ kubectl exec -it <pod name with hash> -- /bin/bash
+$ kubectl exec -it <server pod name with hash> -- /bin/bash
 [root@rtt-server-5b7f49b87f-fqvw2 home]# tar -zxvf inputs.tar.gz
 [root@rtt-server-5b7f49b87f-fqvw2 home]# mv inputs/* /data/
 [root@rtt-server-5b7f49b87f-fqvw2 home]# rm -r inputs
@@ -52,10 +52,10 @@ kubectl create -f rtt-client.yaml
 ```
 4. Log into the pod and untar the client directory
 ```
-$ kubectl exec -it <pod name with hash> -- /bin/bash
+$ kubectl exec -it <client pod name with hash> -- /bin/bash
 [root@rtt-client-5d595d59cf-62gz9 home]# tar -zxvf client.tar.gz
 ```
-5. Run tests! See the main README.md for more.
+5. Run tests! See the [main](https://github.com/jkguiang/rtt-lab/blob/main/README.md)/[client](https://github.com/jkguiang/rtt-lab/blob/main/client/README.md) READMEs for more.
 
 # Useful commands for Kubernetes newbies
 - Make a configmap: `kubectl create configmap <configmap name> --from-file=<path to file> -n <namespace>`
