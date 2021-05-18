@@ -20,6 +20,7 @@ optional arguments:
   -f                       silence any overwrite warnings
   --unittest               run simple_test.py (with any additional args) once
                            with a 0ms delay and again with a 10ms delay
+  --delays DELAYS          comma-separated list of delays in ms (e.g. 1,2,3,4)
   --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)
   --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)
   --step_size STEP SIZE    step size in going from min to max delay (default: 1)
