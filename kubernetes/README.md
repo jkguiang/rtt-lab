@@ -66,7 +66,7 @@ $ kubectl exec -it <client pod name with hash> -- /bin/bash
 
 - Delete a pod: `kubectl delete -f <yaml file>`
 
-- Copy from pod: `kubectl cp pod_name:<path in container> <path in uaf>`
+- Copy from pod: `kubectl cp <pod name with has>:<path in container> <path in uaf>`
 
 - Hop onto a pod: `kubectl exec -it <pod name with hash> -- /bin/bash`
 
