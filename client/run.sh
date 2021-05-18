@@ -114,12 +114,16 @@ elif [[ -f experiments/${experiment}.py ]]; then
                 echo "Running ${experiment}.py with a ${delay_ms}ms delay..."
             fi
             # Add delay
-            tc qdisc add dev eth0 root netem delay ${delay_ms}ms
+            if [ "${delay_ms}" -gt "0" ]; then
+                tc qdisc add dev eth0 root netem delay ${delay_ms}ms
+            fi
             # Run test
             output_json="${ms_output_dir}/report_${rep}.json"
             python experiments/${experiment}.py ${args} --output_json=${output_json}
             # Remove delay
-            tc qdisc del dev eth0 root netem delay ${delay_ms}ms
+            if [ "${delay_ms}" -gt "0" ]; then
+                tc qdisc del dev eth0 root netem delay ${delay_ms}ms
+            fi
             # Compress output
             gzip -f ${output_json}
             echo "Done. Saved report to ${output_json}.gz"
