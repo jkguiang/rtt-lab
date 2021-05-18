@@ -13,8 +13,9 @@ print_help() {
     echo "  -f                       silence any overwrite warnings"
     echo "  --unittest               run simple_test.py (with any additional args) once"
     echo "                           with a 0ms delay and again with a 10ms delay"
-    echo "  --min_delay MIN DELAY    minimum delay in milliseconds (default: 0)"
-    echo "  --max_delay MAX DELAY    maximum delay in milliseconds (default: 0)"
+    echo "  --delays DELAYS          comma-separated list of delays in ms (e.g. 1,2,3,4)"
+    echo "  --min_delay MIN DELAY    minimum delay in ms (default: 0)"
+    echo "  --max_delay MAX DELAY    maximum delay in ms (default: 0)"
     echo "  --step_size STEP SIZE    step size in going from min to max delay (default: 1)"
     echo "  --n_reps NUM REPS        number of times that a test should be repeated for"
     echo "                           a given netem delay (default: 1)"
@@ -25,9 +26,10 @@ print_help() {
 }
 
 # Default values
-help=false
-force=false
+need_help=false
+use_force=false
 unittest=false
+delays_ms=""
 min_delay=0
 max_delay=0
 step_size=1
@@ -41,22 +43,25 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
-        -h) help=true;;
-        -f) force=true;;
+        -h) need_help=true;;
+        -f) use_force=true;;
         --unittest) unittest=true;;
+        --delays) 
+            ORIG_IFS=${IFS}; IFS=","; read -a delays_ms <<< "${val}"; 
+            IFS=${ORIG_IFS};;
         --min_delay) min_delay=${val};;
         --max_delay) max_delay=${val};;     
         --step_size) step_size=${val};;     
         --n_reps) n_reps=${val};;
         --experiment) experiment=${val};;
         --tag) tag="_${val}";;
-        *) args+="$arg ";;
+        *) if [[ "${args}" == "" ]]; then args+="$arg"; else args+=" $arg"; fi;;
     esac
 done
 # Remove all previously set rules
 tc qdisc del dev eth0 root > /dev/null 2>&1
 
-if [[ ${help} = true ]]; then
+if [[ ${need_help} = true ]]; then
     print_help
 elif [[ ${unittest} = true ]]; then
     # Run control
@@ -74,12 +79,14 @@ elif [[ ${unittest} = true ]]; then
     echo "Done."
 elif [[ -f experiments/${experiment}.py ]]; then
     # Generate list of delays in milliseconds
-    delays_ms=$(seq ${min_delay} ${step_size} ${max_delay})
+    if [[ "${delays_ms}" == "" ]]; then
+        delays_ms=$(seq ${min_delay} ${step_size} ${max_delay})
+    fi
     # Make the outputs directory if it doesn't exist already
     mkdir -p outputs
     # Safeguard against accidental overwriting
     output_dir=outputs/${experiment}${tag}
-    while [[ -d ${output_dir} && ${force} = false ]]; do
+    while [[ -d ${output_dir} && ${use_force} = false ]]; do
         echo "Warning: this could may overwrite files in ${output_dir}"
         read -p "Replace current tag? (y/n/abort): " resp
         if [[ ${resp} == [yY] ]]; then
@@ -97,7 +104,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
     # Make directory for this experiment's outputs
     mkdir -p ${output_dir}
     # Run tests
-    for delay_ms in ${delays_ms}; do
+    for delay_ms in ${delays_ms[@]}; do
         ms_output_dir=${output_dir}/${delay_ms}ms
         mkdir -p ${ms_output_dir}
         for rep in $(seq 1 ${n_reps}); do
