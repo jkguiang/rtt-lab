@@ -51,7 +51,12 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       nodeSelector:
-        kubernetes.io/hostname: stashcache.t2.ucsd.edu
+        # kubernetes.io/hostname: fiona-r-uva.vlan7.uvalight.net  # Amsterdam
+        # kubernetes.io/hostname: osg.chic.nrp.internet2.edu      # Chicago
+        # kubernetes.io/hostname: osg.kans.nrp.internet2.ed       # Kansas
+        # kubernetes.io/hostname: osg.newy32aoa.nrp.internet2.edu # New York
+        # kubernetes.io/hostname: siderea.ucsc.edu                # Santa Cruz
+        kubernetes.io/hostname: stashcache.t2.ucsd.edu          # San Diego
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
       volumes:
