@@ -49,7 +49,7 @@ Again, don't forget to include `-n <namespace>` if needed on your system.
 ### Interactive tests
 3. Create the pod
 ```
-kubectl create -f rtt-client.yaml
+kubectl create -f deployments/rtt-client.yaml
 ```
 4. Log into the pod and untar the client directory
 ```
