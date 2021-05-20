@@ -73,9 +73,9 @@ Note that you will need to do this **every time you restart the server**.
 
 5. Create a pod
 ```
-kubectl create -f pods/rtt-client-san-diego.yaml
+kubectl create -f pods/rtt-client-<location>.yaml
 ```
-The pod will copy the outputs to the server pod as a single tarred file, then shut down when the tests are finished.
+where `<location>` is the geographical location of the pod (that you specify [here](https://github.com/jkguiang/rtt-lab/blob/main/kubernetes/make_client_yamls.py#L14-L21)), but all lower case with spaces replaced by dashes (e.g. `New York --> new-york`). The pod will copy the outputs to the server pod as a single tarred file (`<location>.tar.gz`), then shut down when the tests are finished.
 
 ## Useful commands for Kubernetes newbies
 - Make a configmap: `kubectl create configmap <configmap name> --from-file=<path to file> -n <namespace>`
