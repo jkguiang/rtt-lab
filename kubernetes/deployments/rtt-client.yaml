@@ -46,14 +46,17 @@ spec:
         - mountPath: /home/
           name: cache-vol
         - mountPath: /home/client.tar.gz
-          name: rtt-client-configmap
+          name: rtt-client-dir-configmap
           subPath: client.tar.gz
+        - mountPath: /home/run_tests.sh
+          name: rtt-client-exe-configmap
+          subPath: run_tests.sh
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       nodeSelector:
         # kubernetes.io/hostname: fiona-r-uva.vlan7.uvalight.net  # Amsterdam
         # kubernetes.io/hostname: osg.chic.nrp.internet2.edu      # Chicago
-        # kubernetes.io/hostname: osg.kans.nrp.internet2.ed       # Kansas
+        # kubernetes.io/hostname: osg.kans.nrp.internet2.edu       # Kansas
         # kubernetes.io/hostname: osg.newy32aoa.nrp.internet2.edu # New York
         # kubernetes.io/hostname: siderea.ucsc.edu                # Santa Cruz
         kubernetes.io/hostname: stashcache.t2.ucsd.edu          # San Diego
@@ -62,10 +65,17 @@ spec:
       volumes:
       - name: cache-vol
         emptyDir: {}
-      - name: rtt-client-configmap
+      - name: rtt-client-dir-configmap
         configMap: 
-          name: rtt-client-configmap
+          name: rtt-client-dir-configmap
           items:
           - key: client.tar.gz
             path: client.tar.gz
+          defaultMode: 0777
+      - name: rtt-client-exe-configmap
+        configMap: 
+          name: rtt-client-exe-configmap
+          items:
+          - key: run_tests.sh
+            path: run_tests.sh
           defaultMode: 0777

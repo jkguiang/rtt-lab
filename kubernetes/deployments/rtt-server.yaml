@@ -28,6 +28,10 @@ spec:
       containers:
       - image: jguiang/rtt-server:latest
         imagePullPolicy: Always
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "chown -R xrootd /data"]
         ports:
         - containerPort: 1094
         name: rtt-server
