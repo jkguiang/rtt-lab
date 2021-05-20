@@ -16,7 +16,7 @@ Don't forget to include `-n <namespace>` if needed on your system.
 
 3. Create the pod
 ```
-kubectl create -f rtt-server.yaml
+kubectl create -f deployments/rtt-server.yaml
 ```
 4. Log into the pod, untar the inputs directory, and move it to the server area
 ```
@@ -42,10 +42,11 @@ tar -zcvf client.tar.gz ../client
 ```
 2. Make a configmap that points to the tarball we just made
 ```
-kubectl create configmap rtt-client-configmap --from-file=client.tar.gz
+kubectl create configmap rtt-client-dir-configmap --from-file=client.tar.gz
 ```
 Again, don't forget to include `-n <namespace>` if needed on your system.
 
+### Interactive tests
 3. Create the pod
 ```
 kubectl create -f rtt-client.yaml
@@ -56,6 +57,25 @@ $ kubectl exec -it <client pod name with hash> -- /bin/bash
 [root@rtt-client-5d595d59cf-62gz9 home]# tar -zxvf client.tar.gz
 ```
 5. Run tests! See the [main](https://github.com/jkguiang/rtt-lab/blob/main/README.md)/[client](https://github.com/jkguiang/rtt-lab/blob/main/client/README.md) READMEs for more.
+
+### Automatic tests
+Before running the steps below, it is crucial to (a) make sure the server is running and (b) check `make_client_yamls.py` to ensure that the hostname and locations are actually relevant to your studies. The default values are very specific to running on PRP machines! Lastly, check `run_tests.sh` to ensure that the tests being run are the ones you are interested in.
+
+3. Make a configmap that points to `run_tests.sh`
+```
+kubectl create configmap rtt-client-exe-configmap --from-file=run_tests.sh
+```
+4. Make the pod yaml files
+```
+python make_client_yamls.py --server=<IP:port> --name=<optional name>
+```
+Note that you will need to do this **every time you restart the server**.
+
+5. Create a pod
+```
+kubectl create -f pods/rtt-client-san-diego.yaml
+```
+The pod will copy the outputs to the server pod as a single tarred file, then shut down when the tests are finished.
 
 ## Useful commands for Kubernetes newbies
 - Make a configmap: `kubectl create configmap <configmap name> --from-file=<path to file> -n <namespace>`
