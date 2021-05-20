@@ -94,9 +94,9 @@ The pod will copy the outputs to the server pod as a single tarred file, then sh
 
 ## PRP locations
 All RTT times are averages computed by pinging a given server ~30 times and are relative to La Jolla, CA.
-- Amsterdam (RTT = 154ms): `fiona-r-uva.vlan7.uvalight.net`
-- Chicago (RTT = 45ms): `osg.chic.nrp.internet2.edu`
-- Kansas (RTT = 35.2ms): `osg.kans.nrp.internet2.edu`
-- New York (RTT = 63.7): `osg.newy32aoa.nrp.internet2.edu`
-- Santa Cruz (RTT = 10ms): `siderea.ucsc.edu`
 - :trident: San Diego (RTT = 0.38ms): `stashcache.t2.ucsd.edu`
+- Santa Cruz (RTT = 10ms): `siderea.ucsc.edu`
+- Kansas (RTT = 35.2ms): `osg.kans.nrp.internet2.edu`
+- Chicago (RTT = 45ms): `osg.chic.nrp.internet2.edu`
+- New York (RTT = 63.7): `osg.newy32aoa.nrp.internet2.edu`
+- Amsterdam (RTT = 154ms): `fiona-r-uva.vlan7.uvalight.net`
