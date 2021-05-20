@@ -26,7 +26,6 @@ print_help() {
 }
 
 # Default values
-need_help=false
 use_force=false
 unittest=false
 delays_ms=""
@@ -43,7 +42,7 @@ for arg in "$@"; do
     key=$(echo $arg | cut -f1 -d=)
     val=$(echo $arg | cut -f2 -d=)   
     case "$key" in
-        -h) need_help=true;;
+        -h) print_help; exit 0;;
         -f) use_force=true;;
         --unittest) unittest=true;;
         --delays) 
@@ -61,9 +60,7 @@ done
 # Remove all previously set rules
 tc qdisc del dev eth0 root > /dev/null 2>&1
 
-if [[ ${need_help} = true ]]; then
-    print_help
-elif [[ ${unittest} = true ]]; then
+if [[ ${unittest} = true ]]; then
     # Run control
     echo "Running simple_test.py ${args}"
     python experiments/simple_test.py ${args}
