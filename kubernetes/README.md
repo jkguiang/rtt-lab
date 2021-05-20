@@ -1,6 +1,10 @@
 # RTT Lab: Kubernetes
 Since the RTT client and server are Docker containers, we can easily deploy them as pods on a Kubernetes cluster to get real network delays. The instructions below detail how to set this up. Note: this was done using [PRP](https://ucsd-prp.gitlab.io/) resources, so some additional (albeit minor) configuration will certainly be required to set this up on any other system.
 
+In order to implement this, the RTT Lab client and server containers were uploaded to Docker Hub and are publicly available:
+- https://hub.docker.com/r/jguiang/rtt-client
+- https://hub.docker.com/r/jguiang/rtt-server
+
 ## Set up the server pod
 1. Tar up the inputs directory
 ```
