@@ -1,5 +1,6 @@
 import uproot
 import argparse
+import time
 import json
 import rtt
 
@@ -19,9 +20,15 @@ def run_simple_test(server="172.17.0.2:1094", input_file="test_1000ints.dat",
                    for b in range(0, n_bytes, chunk_size)]
     report = {"reads": [], "file": xrd_path}
     for start, stop in byte_ranges:
-        bytes_in = xrd_resource.get(start=start, stop=stop)
-        d = dict(which="chunk", start=start, stop=stop, nbytes=stop-start)
+        d = dict(
+            which="chunk", 
+            when=time.time(), 
+            start=start, 
+            stop=stop, 
+            nbytes=stop-start
+        )
         report["reads"].append(d)
+        bytes_in = xrd_resource.get(start=start, stop=stop)
 
     return report
 

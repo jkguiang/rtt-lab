@@ -17,6 +17,8 @@ class rtt_test:
                 file_reports = func(*args, **kwargs)
                 t1 = time.time()
                 report["file_reports"] = file_reports
+                report["start"] = t0
+                report["stop"] = t1
                 report["runtime"] = t1 - t0
                 return report
         else:
@@ -25,6 +27,8 @@ class rtt_test:
                 file_report = func(*args, **kwargs)
                 t1 = time.time()
                 report["file_reports"] = [file_report]
+                report["start"] = t0
+                report["stop"] = t1
                 report["runtime"] = t1 - t0
                 return report
 
