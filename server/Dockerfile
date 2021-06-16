@@ -3,7 +3,8 @@ EXPOSE 1094
 
 # Install basic packages
 RUN yum update -y && yum install -y \
-    osg-xrootd-standalone
+    osg-xrootd-standalone \
+    tcpdump
 
 # Make directory for data
 RUN mkdir /data
