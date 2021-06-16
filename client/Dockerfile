@@ -3,6 +3,7 @@ FROM rootproject/root:6.22.02-centos7
 # Install basic packages
 RUN yum update -y && yum install -y \
     curl \
+    tcpdump \
     iproute2 \
     python3 \
     xrootd-client
@@ -16,7 +17,7 @@ ENV CONDA=/root/miniconda3/bin/conda
 RUN $CONDA init
 # Configure conda
 RUN $CONDA config --set auto_activate_base false && $CONDA config --add channels conda-forge
-# Set up an environment
+# Set up conda environment for RTT tests
 RUN $CONDA create --name rtt-env -y && \
     $CONDA install -n rtt-env -y uproot xrootd awkward numba pandas
 

@@ -25,6 +25,13 @@ print_help() {
     echo "All additional args are passed to the experiment"
 }
 
+# Check if conda environment is active
+if [[ "$(which python)" != "/root/miniconda3/envs/rtt-env/bin/python" ]]; then
+    echo "WARNING: rtt-env was not active, activating now..."
+    source /root/miniconda3/etc/profile.d/conda.sh
+    conda activate rtt-env
+fi
+
 # Default values
 use_force=false
 unittest=false
@@ -53,12 +60,16 @@ for arg in "$@"; do
         --step_size) step_size=${val};;     
         --n_reps) n_reps=${val};;
         --experiment) experiment=${val};;
-        --tag) tag="_${val}";;
+        --tag) tag=${val};;
         *) if [[ "${args}" == "" ]]; then args+="$arg"; else args+=" $arg"; fi;;
     esac
 done
-# Remove all previously set rules
+# Remove any previously set rules
 tc qdisc del dev eth0 root > /dev/null 2>&1
+# Stop any tcpdump monitoring that is currently running
+if [[ "$(ps -e | pgrep tcpdump)" != "" ]]; then
+    kill -2 $(ps -e | pgrep tcpdump) > /dev/null 2>&1
+fi
 
 if [[ ${unittest} = true ]]; then
     # Run control
@@ -82,7 +93,7 @@ elif [[ -f experiments/${experiment}.py ]]; then
     # Make the outputs directory if it doesn't exist already
     mkdir -p outputs
     # Safeguard against accidental overwriting
-    output_dir=outputs/${experiment}${tag}
+    output_dir=outputs/${experiment}_${tag}
     while [[ -d ${output_dir} && ${use_force} = false ]]; do
         echo "Warning: this could may overwrite files in ${output_dir}"
         read -p "Replace current tag? (y/n/abort): " resp
@@ -100,6 +111,10 @@ elif [[ -f experiments/${experiment}.py ]]; then
     done
     # Make directory for this experiment's outputs
     mkdir -p ${output_dir}
+    # Start tcpdump monitoring
+    echo "Starting tcpdump monitoring..."
+    tcpdump -n -i any &> ${output_dir}/tcpdump.out &
+    sleep 5
     # Run tests
     for delay_ms in ${delays_ms[@]}; do
         ms_output_dir=${output_dir}/${delay_ms}ms
@@ -126,6 +141,10 @@ elif [[ -f experiments/${experiment}.py ]]; then
             echo "Done. Saved report to ${output_json}.gz"
         done
     done
+    # Stop tcpdump monitoring
+    echo "Stopping tcpdump monitoring..."
+    sleep 5; kill -2 $(ps -e | pgrep tcpdump) > /dev/null 2>&1
+    echo "Done. Saved tcpdump output to ${output_dir}/tcpdump.out"
 elif [[ ${experiment} != "" ]]; then
     echo "ERROR: experiments/${experiment}.py does not exist!"
 else
