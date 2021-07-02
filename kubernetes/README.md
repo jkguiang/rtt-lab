@@ -71,9 +71,9 @@ kubectl create configmap rtt-client-exe-configmap --from-file=run_tests.sh
 ```
 4. Make the pod yaml files
 ```
-python make_client_yamls.py --server=<IP:port> --name=<optional name>
+python make_client_yamls.py --name=rtt-client
 ```
-Note that you will need to do this **every time you restart the server**.
+For usage details, use the `-h` option. Note that you will need to do this **every time you restart the server**.
 
 5. Create a pod
 ```
