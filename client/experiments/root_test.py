@@ -4,14 +4,14 @@ import json
 import rtt
 
 @rtt.wrappers.rtt_test()
-def run_root_test(server="172.17.0.2:1094", verbose=False):
+def run_root_test(server="172.17.0.2:1094", input_file="test.root", verbose=False):
     """
     Read all of the branches from the test.root file on the server using a modified 
     Uproot XRootD source object
     (thanks to Nick Amin for writing this test)
     """
     # Define connection to XRootD file
-    xrd_path = f"root://{server}//test.root"
+    xrd_path = f"root://{server}//{input_file}"
     # Grab the file and read in the ttree object
     uproot_file = uproot.open(xrd_path, xrootd_handler=rtt.objects.RTTSource)
     ttree = uproot_file["tree"]
@@ -39,11 +39,20 @@ if __name__ == "__main__":
         type=str, default="172.17.0.2:1094",
         help="<IP>:<port> of server"
     )
+    cli.add_argument(
+        "--input_file", 
+        type=str, default="test.root",
+        help="Path to input file on server"
+    )
 
     # Get args
     args = cli.parse_args()
     # Run test
-    report = run_root_test(server=args.server, verbose=args.verbose)
+    report = run_root_test(
+        server=args.server, 
+        input_file=args.input_file,
+        verbose=args.verbose
+    )
     # Write out report
     if args.output_json:
         with open(args.output_json, "w") as f_out:
